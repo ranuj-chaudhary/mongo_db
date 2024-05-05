@@ -1,0 +1,73 @@
+MONGO DB SETUP
+
+1st Step
+INSTALL MONGODB COMMUNITY SERVER
+link: https://www.mongodb.com/try/download/community
+
+
+2nd Step
+Install or Extract zip filed os MongoShel where mongo db installed
+Path of Mongodb Server: C:\Program Files\MongoDB
+
+What is Mongo Shell?
+(use to communicate with server)
+
+create database
+perform query of create,read,update,delete
+
+
+3rd Step
+Open command prompt with server bin folder location
+Path: C:\Program Files\MongoDB\mongosh-2.2.5-win32-x64\bin
+Run Command to start server: mongod
+                              V
+                              V
+Open command prompt with Mongo Shell bin folder location
+
+Path: C:\Program Files\MongoDB\mongosh-2.2.5-win32-x64\bin
+Run Command to start Mongo Shell: mongosh
+
+
+Mongo Compass
+(Graphical User InterPhse)
+(Client Graphical User Interface to connect to query with server)
+- fetch data from MongoDB Server
+
+Mongo DB Commands
+
+Show All Database
+show dbs or show databases
+
+Create a new database
+
+use databaseName
+Example: use blog
+
+Create Collection using mongosh
+db.createCollection("posts")
+
+Note: while inserting data to collection if collection not exist
+than insert command will create collection with name of collection to be inserted.
+Example: db.posts.insertOne(object)
+
+Insert Documents
+
+Single Document Insert
+db.posts.insertOne(object)
+
+Example:
+db.posts.insertOne({
+  title: "Post Title 1",
+  body: "Body of post.",
+  category: "News",
+  likes: 1,
+  tags: ["news", "events"],
+  date: Date()
+})
+Note: If you try to insert documents into a collection that does not exist, MongoDB will create the collection automatically.
+
+Multiple Document Insert
+
+
+
+
