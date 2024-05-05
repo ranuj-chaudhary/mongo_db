@@ -67,7 +67,92 @@ db.posts.insertOne({
 Note: If you try to insert documents into a collection that does not exist, MongoDB will create the collection automatically.
 
 Multiple Document Insert
+db.posts.insertMany({object1}, {object2})
 
+Find Data
+There are 2 methods to find and select data from a MongoDB collection, find() and findOne().
 
+find()
+To select data from a collection in MongoDB, we can use the find() method.
+Note: This method accepts a query object. If left empty, all documents will be returned.
+
+If left empty, all documents will be returned.
+
+db.posts.find()              
+[
+  {
+    _id: ObjectId("62c350dc07d768a33fdfe9b0"),
+    title: 'Post Title 1',
+     },
+ {
+    _id: ObjectId("62c350dc07d768a33fdfe9b0"),
+    title: 'Post Title 1',
+     },
+ {
+    _id: ObjectId("62c350dc07d768a33fdfe9b0"),
+    title: 'Post Title 1',
+     },
+]
+
+Find with object value to find
+
+db.posts.find({title:"first"})
+
+Filter data by fields
+
+db.posts.find({}, {title: 1, date: 1})
+all collection with title and date will be sent
+
+Note: Note: You cannot use both 0 and 1 in the same object. The only exception is the _id field. You should either specify the fields you would like to include or the fields you would like to exclude.
+Example:
+db.posts.find({}, {_id: 0, title: 1, date: 1})
+db.posts.find({}, {title: 1, date: 0})
+
+Update Document
+To update an existing document we can use the updateOne() or updateMany() methods.
+Now let's update the "likes" on this post to 2. To do this, we need to use the $set operator.
+db.posts.updateOne( { title: "Post Title 1" }, { $set: { likes: 2 } } ) 
+
+Insert if not found
+If you would like to insert the document if it is not found, you can use the upsert option.
+
+db.posts.updateOne( 
+  { title: "Post Title 5" }, 
+  {
+    $set: 
+      {
+        title: "Post Title 5",
+        body: "Body of post.",
+        category: "Event",
+        likes: 5,
+        tags: ["news", "events"],
+        date: Date()
+      }
+  }, 
+  { upsert: true }
+)
+
+updateMany()
+The updateMany() method will update all documents that match the provided query.
+
+db.posts.updateMany({}, { $set: { category:"sports" } })
+
+Note: To increament Numeric Value
+Update likes on all documents by 1. For this we will use the $inc (increment) operator:
+
+db.posts.updateMany({}, { $inc: { likes: 1 } })
+
+Delete Documents
+We can delete documents by using the methods deleteOne() or deleteMany().
+
+These methods accept a query object. The matching documents will be deleted.
+
+deleteOne()
+The deleteOne() method will delete the first document that matches the query provided.
+
+deleteMany()
+db.posts.deleteOne({ title: "Post Title 5" })
+
+db.posts.deleteMany({ category: "Technology" })
 
 
