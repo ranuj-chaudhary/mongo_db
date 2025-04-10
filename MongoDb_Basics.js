@@ -6,7 +6,7 @@ link: https://www.mongodb.com/try/download/community
 
 
 // 2nd Step
-// Install or Extract zip filed os MongoShel where mongo db installed
+// Install or Extract zip filed or MongoShell where mongo db installed
 // Path of Mongodb Server: C:\Program Files\MongoDB
 
 // What is Mongo Shell?
@@ -31,7 +31,7 @@ link: https://www.mongodb.com/try/download/community
 // MONGO CAMPASS
 // (Graphical User InterPhse)
 // (Client Graphical User Interface to connect to query with server)
-// - fetch data from MongoDB Server
+// -fetch data from MongoDB Server
 
 // MONGO DB COMMANDS
 
@@ -100,7 +100,7 @@ link: https://www.mongodb.com/try/download/community
         db.posts.find({}, {title: 1, date: 0})
 
    //   ii)  db.posts.findOne() // Retrieves a single document that matches the query.
-
+        //  use case: to find user exist
         Model.findOne({ name: "John" }) // Returns the first document where name is "John"
         .then(doc => console.log(doc))
         .catch(err => console.error(err));
@@ -263,19 +263,20 @@ link: https://www.mongodb.com/try/download/community
         // DESCENDING ORDER
         User.find({isMarried: false}).select('name salary').sort('-salary')
 
-// 15) LIMTIT (sends no of documents metion in query)
+// 15) LIMTIT & SKIP (sends no of documents metion in query)
         User.find({isMarried: false}).select('name salary').sort('salary').limit(2)
+        User.find({isMarried: false}).select('name salary').sort('salary').skip(5).limit(5)
 
 // 16) COUNT (sends no of documents metion in query)
         User.find({isMarried: false}).countDocuments()
 
-// 17) Comparison Operator
+// 17) COMPARISON OPERATOR
         // eq   - equal
-        User.find(age: {$eq: 30})
+        User.find({age: {$eq: 30}})
         // ne   - not equal
-        User.find(age: {$ne: 30})
+        User.find({age: {$ne: 30}})
         // gt   - greater
-        User.find(salary: {$gte: 60000})
+        User.find({salary: {$gte: 60000}})
         // gte  - greater than equal
         // lt   - less than
         // lte  - less than equal
@@ -283,19 +284,96 @@ link: https://www.mongodb.com/try/download/community
 
         User.find(salary: {$in: [50000, 80000, 25000]})
         // nin  - not between
-        
+        User.find(salary: {$nin: [50000, 80000, 25000]})
         
         // 17) AND / OR Operator
         
         // or
-        User.find().or({isMarried: true}, {age: 30})
+        db.restaurants.find({
+                $or: [
+                  { cuisine: "Italian" },
+                  { rating: { $gte: 4.5 } }
+                ]
+              })
+              
         // Note: if any condition is true that will be considered
+
         // and
-        User.find().and({isMarried: true}, {age: 30})
+        db.restaurants.find({
+                $and: [
+                  { rating: { $gte: 4.5 } },
+                  { cuisine: "Italian" }
+                ]
+              })
+          
         // Note: both condition should pass and get result       
 
-        
-        
+        // and or combined
+        db.restaurants.find({
+                $and: [
+                  { rating: { $gte: 4.0 } },
+                  {
+                    $or: [
+                      { cuisine: "Italian" },
+                      { cuisine: "Mexican" }
+                    ]
+                  }
+                ]
  
 
 
+// AGGREGATION FRAMEWORK
+/*
+-> used for complex operations like filtering, grouping, sorting, reshaping, and summarizing data in
+flexible way via pipeline
+
+stage1 -> state2 -> state3
+
+db.orders.aggregate([
+// stage1: filter  pizza order documents by pizza size
+{$match: {size: "medium"}},
+
+// stage2: Group remaining document by pizza name and calculate total quantity
+{$group: {_id: "name", totalQuantity: {$sum: "$quantity"}}},
+
+
+])
+
+ */
+// orders of STAGES IN MongoDB
+
+db.movies.aggregate([
+        { $match: { year: 2023 } },               // Filter
+        { $sort: { rating: -1 } },                // Sort by rating
+        { $limit: 5 },                            // Top 5 movies
+        { $project: { title: 1, rating: 1 } }     // Only show title and rating
+      ])
+
+
+// MOSTLY USED STAGES
+
+Most Commonly Used Stages (in practical order)
+Here’s a typical and logical order of the most used aggregation stages:
+
+Stage	                Purpose	Example
+*******                 ***************
+                                                                        
+$match	                Filter documents (like WHERE)	                     { $match: { year: 2023 } }
+
+$sort	                Sort documents (like ORDER BY)	                     { $sort: { rating: -1 } }
+
+$limit	                Limit number of documents	                     { $limit: 10 }
+
+$skip	                Skip certain number of documents	             { $skip: 10 }
+
+$project	        Select / reshape fields (like SELECT)	             { $project: { title: 1, rating: 1 } }
+
+$group	                Group documents and calculate aggregates	     { $group: { _id: "$genre", avgRating: { $avg: "$rating" } } }
+
+$unwind	                Deconstruct arrays into separate documents	     { $unwind: "$actors" }
+
+$lookup	                Join with another collection (like SQL JOIN)	     { $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "userInfo" } }
+
+$addFields	        Add new fields (after computation or lookup)         { $addFields: { fullName: { $concat: ["$first", " ", "$last"] } } }
+
+$count	                Count documents	                                     { $count: "totalMovies" }

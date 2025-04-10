@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
+import express from 'express';
 const { Schema } = mongoose;
 // returns promise
+
+const app = express();
 
 ('mongodb://127.0.0.1:27017/myapp');
 // myapp in url is => databaseName
@@ -13,7 +16,7 @@ mongoose
 // Schema (Shape of Document)
 // Document, Collection, Database
 
-//object inside the schema is Tablse fields
+//object inside the schema is Table fields
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -31,10 +34,10 @@ const User = mongoose.model('User', userSchema);
 async function addNewUser() {
   try {
     const user = new User({
-      name: 'Raneesh Malik',
+      name: 'Ranuj Malik',
       age: 34,
       isMarried: false,
-      email: 'raneeshchoudhary01@gmail.com',
+      email: 'ranuj@gmail.com',
       salary: 250000,
       gender: 'Male',
     });
@@ -44,3 +47,5 @@ async function addNewUser() {
   }
 }
 addNewUser();
+
+
